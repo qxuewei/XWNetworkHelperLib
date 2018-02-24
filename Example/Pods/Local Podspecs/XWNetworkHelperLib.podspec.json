@@ -18,5 +18,13 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "XWNetworkHelperLib/Classes/**/*"
+  "source_files": "XWNetworkHelperLib/Classes/**/*",
+  "dependencies": {
+    "AFNetworking": [
+
+    ],
+    "YYCache": [
+
+    ]
+  }
 }
