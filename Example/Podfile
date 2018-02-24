@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'XWNetworkHelperLib_Example' do
+  pod 'XWNetworkHelperLib', :path => '../'
+
+  target 'XWNetworkHelperLib_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
