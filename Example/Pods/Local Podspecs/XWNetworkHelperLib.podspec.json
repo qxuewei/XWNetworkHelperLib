@@ -1,0 +1,22 @@
+{
+  "name": "XWNetworkHelperLib",
+  "version": "0.1.0",
+  "summary": "A short description of XWNetworkHelperLib.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/qxuewei@yeah.net/XWNetworkHelperLib",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "qxuewei@yeah.net": "qxuewei@yeah.net"
+  },
+  "source": {
+    "git": "https://github.com/qxuewei@yeah.net/XWNetworkHelperLib.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "XWNetworkHelperLib/Classes/**/*"
+}

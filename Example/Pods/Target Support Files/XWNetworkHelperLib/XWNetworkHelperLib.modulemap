@@ -1,0 +1,6 @@
+framework module XWNetworkHelperLib {
+  umbrella header "XWNetworkHelperLib-umbrella.h"
+
+  export *
+  module * { export * }
+}

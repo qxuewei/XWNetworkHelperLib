@@ -1,0 +1,16 @@
+PODS:
+  - XWNetworkHelperLib (0.1.0)
+
+DEPENDENCIES:
+  - XWNetworkHelperLib (from `../`)
+
+EXTERNAL SOURCES:
+  XWNetworkHelperLib:
+    :path: ../
+
+SPEC CHECKSUMS:
+  XWNetworkHelperLib: cbb7d919e323bb6208815ac2b4bdd33ba23c24f2
+
+PODFILE CHECKSUM: f3f229aa5087e08ff3c1798acac159dab9766311
+
+COCOAPODS: 1.4.0
