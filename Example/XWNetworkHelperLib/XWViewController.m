@@ -21,14 +21,14 @@
     [super viewDidLoad];
     NSString *path = @"https://www.baidu.com";
     [XWNetworkHelper setResponseSerializer:XWResponseSerializerHTTP];
+    [XWNetworkHelper openLog];
     
     
     // get
     [XWNetworkHelper GET:path parameters:nil success:^(id responseObject) {
         //成功
         NSLog(@"成功%@",responseObject);
-    } failure:^(NSError *error) {
-        //失败
+    } failure:^(NSError *error, NSInteger code, NSString *message) {
         NSLog(@"失败%@",error);
     }];
     
@@ -38,7 +38,7 @@
     } success:^(id responseObject) {
         //成功-请求的数据
         NSLog(@"成功%@",responseObject);
-    } failure:^(NSError *error) {
+    } failure:^(NSError *error, NSInteger code, NSString *message) {
         //失败
         NSLog(@"失败%@",error);
     }];
@@ -47,7 +47,7 @@
     [XWNetworkHelper POST:path parameters:nil success:^(id responseObject) {
         //成功
         NSLog(@"成功%@",responseObject);
-    } failure:^(NSError *error) {
+    } failure:^(NSError *error, NSInteger code, NSString *message) {
         //失败
         NSLog(@"失败%@",error);
     }];
@@ -58,7 +58,7 @@
     } success:^(id responseObject) {
         //成功-请求的数据
         NSLog(@"成功%@",responseObject);
-    } failure:^(NSError *error) {
+    } failure:^(NSError *error, NSInteger code, NSString *message) {
         //失败
         NSLog(@"失败%@",error);
     }];

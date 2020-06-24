@@ -11,6 +11,15 @@
 #import "AFNetworkActivityIndicatorManager.h"
 #import "YYCache.h"
 
+typedef NS_ENUM(NSUInteger, XWRequestMethod) {
+    XWRequestMethodGet      =   0,
+    XWRequestMethodPost     =   1,
+    XWRequestMethodPut      =   2,
+    XWRequestMethodDelete   =   3,
+    XWRequestMethodPatch    =   4,
+    XWRequestMethodHead     =   5,
+};
+
 #pragma mark - 宏
 
 #ifdef DEBUG
@@ -68,6 +77,8 @@
 static BOOL xw_isOpenLog;
 static NSMutableArray <NSURLSessionTask *> *xw_allSessionTask;
 static AFHTTPSessionManager *xw_sessionManager;
+static NSDictionary *xw_networkGlobalHeader;
+static NSDateFormatter *xw_networkDateFormatter;
 
 #pragma mark - public
 /// 有网YES, 无网:NO
@@ -155,79 +166,104 @@ static AFHTTPSessionManager *xw_sessionManager;
 }
 
 #pragma mark Get 请求
-/// Get 无缓存
+/**
+ Get 无缓存
+ */
 + (__kindof NSURLSessionTask *)GET:(NSString *)URL
-                        parameters:(id)parameters
+                        parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    return [self GET:URL parameters:parameters responseCache:nil success:success failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    
 }
 
-/// Get 自动缓存
+/**
+ Get 自动缓存
+ */
 + (__kindof NSURLSessionTask *)GET:(NSString *)URL
-                        parameters:(id)parameters
+                        parameters:(NSDictionary *)parameters
                      responseCache:(XWHttpRequestCache)responseCache
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    responseCache != nil ? responseCache([XWNetworkHelperCache httpCacheWithURL:URL paramters:parameters]) : nil;
-    NSURLSessionTask *sessionTask = [xw_sessionManager GET:URL parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
-        
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [[self xw_allSessionTask] removeObject:task];
-        success ? success(responseObject) : nil;
-        responseObject != nil ? [XWNetworkHelperCache setHttpCache:responseObject URL:URL parameters:parameters] : nil;
-        if (xw_isOpenLog) {
-            XWNetLog(@"success -> url:%@ -> param:%@ -> responseObject:%@",URL,parameters,responseObject);
-        }
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [[self xw_allSessionTask] removeObject:task];
-        failure ? failure(error) : nil;
-        if (xw_isOpenLog) {
-            XWNetLog(@"error -> url:%@ -> param:%@ -> error:%@",URL,parameters,error);
-        }
-        
-    }];
-    sessionTask ? [[self xw_allSessionTask] addObject:sessionTask] : nil;
-    return sessionTask;
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ Get 自动缓存 - 指定缓存参数
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                   cacheParameters:(NSDictionary *)cacheParameters
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:cacheParameters responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
 }
 
 #pragma mark POST 请求
-/// POST 无缓存
+/**
+ POST 无缓存
+ */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
-                        parameters:(id)parameters
-                           success:(XWHttpRequestSuccess)success
-                           failure:(XWHttpRequestFailed)failure {
-    return [self POST:URL parameters:parameters responseCache:nil success:success failure:failure];
+                         parameters:(NSDictionary *)parameters
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    
 }
 
-/// POST 自动缓存
+/**
+ POST 无缓存  成功回调 (包含 header)
+ */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
-                        parameters:(id)parameters
-                     responseCache:(XWHttpRequestCache)responseCache
+                         parameters:(NSDictionary *)parameters
+                  successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:nil success:nil successWithHeader:successWithHeader failure:failure];
+    
+}
+
+/**
+ POST 自动缓存
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ POST 自动缓存 - 指定缓存参数
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                    cacheParameters:(NSDictionary *)cacheParameters
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:cacheParameters responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+#pragma mark - PUT
++ (__kindof NSURLSessionTask *)PUT:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    responseCache != nil ? responseCache([XWNetworkHelperCache httpCacheWithURL:URL paramters:parameters]) : nil;
-    NSURLSessionTask *sessionTask = [xw_sessionManager POST:URL parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
-        
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [[self xw_allSessionTask] removeObject:task];
-        success ? success(responseObject) : nil;
-        responseObject != nil ? [XWNetworkHelperCache setHttpCache:responseObject URL:URL parameters:parameters] : nil;
-        if (xw_isOpenLog) {
-            XWNetLog(@"success -> url:%@ -> param:%@ -> responseObject:%@",URL,parameters,responseObject);
-        }
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [[self xw_allSessionTask] removeObject:task];
-        failure ? failure(error) : nil;
-        if (xw_isOpenLog) {
-            XWNetLog(@"error -> url:%@ -> param:%@ -> error:%@",URL,parameters,error);
-        }
-        
-    }];
-    sessionTask ? [[self xw_allSessionTask] addObject:sessionTask] : nil;
-    return sessionTask;
+    return [self xw_requestWithURL:URL method:XWRequestMethodPut parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+}
+
+#pragma mark - DELETE
++ (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
+                           parameters:(NSDictionary *)parameters
+                              success:(XWHttpRequestSuccess)success
+                              failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodDelete parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
 }
 
 #pragma mark 上传
@@ -239,10 +275,10 @@ static AFHTTPSessionManager *xw_sessionManager;
                                progress:(XWHttpProgress)progress
                                 success:(XWHttpRequestSuccess)success
                                 failure:(XWHttpRequestFailed)failure {
-    NSURLSessionTask *sessionTask = [xw_sessionManager POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSURLSessionTask *sessionTask = [xw_sessionManager POST:URL parameters:parameters headers:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSError *error = nil;
         [formData appendPartWithFileURL:[NSURL URLWithString:filePath] name:name error:&error];
-        (failure && error) ? failure(error) : nil;
+        ( failure && error ) ? failure(error,404,@"") : nil;
         
     } progress:^(NSProgress * _Nonnull downloadProgress) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -250,20 +286,31 @@ static AFHTTPSessionManager *xw_sessionManager;
         });
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [[self xw_allSessionTask] removeObject:task];
         success ? success(responseObject) : nil;
+        [[self xw_allSessionTask] removeObject:task];
         responseObject != nil ? [XWNetworkHelperCache setHttpCache:responseObject URL:URL parameters:parameters] : nil;
         if (xw_isOpenLog) {
             XWNetLog(@"success -> url:%@ -> param:%@ -> responseObject:%@",URL,parameters,responseObject);
         }
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSInteger code = error.code;
+        NSString *message = nil;
+        NSData *data = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+        if (data) {
+            NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if (string) {
+                NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *err;
+                NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                message = responseObject[@"errorDescription"];
+            }
+        }
+        failure ? failure(error,code,message) : nil;
         [[self xw_allSessionTask] removeObject:task];
-        failure ? failure(error) : nil;
         if (xw_isOpenLog) {
             XWNetLog(@"error -> url:%@ -> param:%@ -> error:%@",URL,parameters,error);
         }
-        
     }];
     sessionTask ? [[self xw_allSessionTask] addObject:sessionTask] : nil;
     return sessionTask;
@@ -281,23 +328,16 @@ static AFHTTPSessionManager *xw_sessionManager;
                                  progress:(XWHttpProgress)progress
                                   success:(XWHttpRequestSuccess)success
                                   failure:(XWHttpRequestFailed)failure {
-    NSURLSessionTask *sessionTask = [xw_sessionManager POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSURLSessionTask *sessionTask = [xw_sessionManager POST:URL parameters:parameters headers:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         
-        for (NSUInteger i = 0; i < images.count; i++) {
-            NSData *imageData = UIImageJPEGRepresentation(images[i], imageScale ?: 1.0f);
-            
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            formatter.dateFormat = @"yyyyMMddHHmmss";
-            NSString *dataStr = [formatter stringFromDate:[NSDate date]];
-            NSString *imageFileName = XWNSStringFormat(@"%@%ld.%@",dataStr,i,imageType?:@"jpg");
-            
-            /// 存储路径默认时间戳加序号,若外部定义则使用定义的文件路径
+        [images enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSData *imageData = UIImageJPEGRepresentation(obj, imageScale ?: 1.0f);
+            NSString *imageFileName = [self imageFileNameIndex:idx imageType:imageType];
             if (fileNames && fileNames.count == images.count && imageType) {
-                imageFileName = XWNSStringFormat(@"%@.%@",fileNames[i],imageType);
+                imageFileName = XWNSStringFormat(@"%@.%@",fileNames[idx],imageType);
             }
-            
-            [formData appendPartWithFileData:imageData name:name fileName:imageFileName mimeType:XWNSStringFormat(@"image/%@",imageType ?: @"jpg")];
-        }
+            [formData appendPartWithFileData:imageData name:name fileName:imageFileName mimeType:XWNSStringFormat(@"image/%@",imageType?:@"jpg")];
+        }];
         
     } progress:^(NSProgress * _Nonnull downloadProgress) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -314,11 +354,26 @@ static AFHTTPSessionManager *xw_sessionManager;
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [[self xw_allSessionTask] removeObject:task];
-        failure ? failure(error) : nil;
+        NSInteger code = error.code;
+        if ([task.response isKindOfClass:NSHTTPURLResponse.class]) {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+            code = response.statusCode;
+        }
+        NSString *message = nil;
+        NSData *data = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+        if (data) {
+            NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if (string) {
+                NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *err;
+                NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                message = responseObject[@"errorDescription"];
+            }
+        }
+        failure ? failure(error,code,message) : nil;
         if (xw_isOpenLog) {
             XWNetLog(@"error -> url:%@ -> param:%@ -> error:%@",URL,parameters,error);
         }
-        
     }];
     sessionTask ? [[self xw_allSessionTask] addObject:sessionTask] : nil;
     return sessionTask;
@@ -344,7 +399,9 @@ static AFHTTPSessionManager *xw_sessionManager;
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         [[self xw_allSessionTask] removeObject:downloadTask];
         if (error) {
-            failure ? failure(error) : nil;
+            NSInteger errorCode = error.code;
+            NSString *errorMessage = nil;
+            failure ? failure(error,errorCode,errorMessage) : nil;
             if (xw_isOpenLog) {
                 XWNetLog(@"error -> url:%@ -> fileDir:%@ -> error:%@",URL,fileDir,error);
             }
@@ -371,6 +428,14 @@ static AFHTTPSessionManager *xw_sessionManager;
  */
 + (void)setAFHTTPSessionManagerProperty:(void(^)(AFHTTPSessionManager *sessionManager))sessionManager {
     xw_sessionManager ? sessionManager(xw_sessionManager) : nil;
+}
+
+/// 设置全局 header
+/// @param header header
++ (void)configGlobalHeader:(NSDictionary *)header {
+    @synchronized (self) {
+        xw_networkGlobalHeader = header;
+    }
 }
 
 /**
@@ -415,6 +480,14 @@ static AFHTTPSessionManager *xw_sessionManager;
 }
 
 /**
+ 移除AuthorizationHeader
+ Clears any existing value for the "Authorization" HTTP header.
+ */
++ (void)clearAuthorizationHeader {
+    [xw_sessionManager.requestSerializer clearAuthorizationHeader];
+}
+
+/**
  配置自建证书的Https请求, 参考链接: http://blog.csdn.net/syg90178aw/article/details/52839103
  
  @param cerPath 自建Https证书的路径
@@ -435,6 +508,129 @@ static AFHTTPSessionManager *xw_sessionManager;
     [xw_sessionManager setSecurityPolicy:securityPolicy];
 }
 
+#pragma mark - Private
+/// 统一处理请求
++ (__kindof NSURLSessionTask *)xw_requestWithURL:(NSString *)URL
+                                          method:(XWRequestMethod)method
+                                      parameters:(NSDictionary *)parameters
+                                 cacheParameters:(NSDictionary *)cacheParameters
+                                   responseCache:(XWHttpRequestCache)responseCache
+                                         success:(XWHttpRequestSuccess)success
+                               successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
+                                         failure:(XWHttpRequestFailed)failure {
+    if (responseCache) {
+        /// 若需缓存先回调缓存数据
+        if (cacheParameters) {
+            responseCache([XWNetworkHelperCache httpCacheWithURL:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]] paramters:cacheParameters]);
+        }else{
+            responseCache([XWNetworkHelperCache httpCacheWithURL:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]] paramters:parameters]);
+        }
+    }
+    
+    NSURLSessionTask *sessionTask = [self xw_sessionTasktWithURL:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]] method:method parameters:parameters success:^(NSURLSessionDataTask *task, id  _Nullable responseObject) {
+        success ? success(responseObject) : nil;
+        if (successWithHeader) {
+            if ([task.response isKindOfClass:NSHTTPURLResponse.class]) {
+                NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+                NSDictionary *allHeaderFields = response.allHeaderFields;
+                successWithHeader ? successWithHeader(responseObject,allHeaderFields) : nil;
+            }
+        }
+        if (responseCache && responseObject) {
+            if (cacheParameters) {
+                [XWNetworkHelperCache setHttpCache:responseObject URL:URL parameters:cacheParameters];
+            }else{
+                [XWNetworkHelperCache setHttpCache:responseObject URL:URL parameters:parameters];
+            }
+        }
+        if (xw_isOpenLog) {
+            XWNetLog(@"*****  success -> method:%@ -> url:%@ -> param:%@ -> responseObject:%@",[self requestMethodWithType:method],URL,parameters,responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSInteger code = NSIntegerMax;
+        NSString *message = nil;
+        NSDictionary *responseObject;
+        NSData *data = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+        if (data) {
+            NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if (string) {
+                NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *err;
+                responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+                message = responseObject[@"msg"];
+                code = [responseObject[@"code"] integerValue];
+            }
+        }
+        failure ? failure(error,code,message) : nil;
+        if (xw_isOpenLog) {
+            XWNetLog(@"error -> method:%@ -> url:%@ -> param:%@ -> errorObject:%@-> error:%@",[self requestMethodWithType:method],URL,parameters,responseObject,error);
+        }
+    }];
+    sessionTask ? [[self xw_allSessionTask] addObject:sessionTask] : nil;
+    return sessionTask;
+}
+
+/// 包装 AFN 请求类
++ (NSURLSessionTask *)xw_sessionTasktWithURL:(NSString *)URL
+                                      method:(XWRequestMethod)method
+                                  parameters:(NSDictionary *)parameters
+                                     success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                                     failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure {
+    NSURLSessionTask *sessionTask;
+    switch (method) {
+        case XWRequestMethodGet:
+            sessionTask = [xw_sessionManager GET:URL parameters:parameters headers:xw_networkGlobalHeader progress:nil success:success failure:failure];
+            break;
+
+        case XWRequestMethodPost:
+            sessionTask = [xw_sessionManager POST:URL parameters:parameters headers:xw_networkGlobalHeader progress:nil success:success failure:failure];
+            break;
+
+        case XWRequestMethodPut:
+            sessionTask = [xw_sessionManager PUT:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            break;
+
+        case XWRequestMethodDelete:
+            sessionTask = [xw_sessionManager DELETE:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            break;
+
+        case XWRequestMethodPatch:
+            sessionTask = [xw_sessionManager PATCH:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            break;
+            
+        case XWRequestMethodHead:
+            sessionTask = [xw_sessionManager HEAD:URL parameters:parameters headers:xw_networkGlobalHeader success:^(NSURLSessionDataTask * _Nonnull task) {
+                success(task, nil);
+            } failure:failure];
+            break;
+    }
+    return sessionTask;
+}
+
+/// 上传文件名
++ (NSString *)imageFileNameIndex:(NSUInteger)index imageType:(NSString *)imageType {
+    NSString *dateStr = [[self xw_networkDateFormatter] stringFromDate:[NSDate date]];
+    return XWNSStringFormat(@"%@%lu.%@",dateStr,(unsigned long)index,imageType?:@"jpg");
+}
+
++ (NSString *)requestMethodWithType:(XWRequestMethod)type {
+    switch (type) {
+        case XWRequestMethodGet:
+            return @"GET";
+        case XWRequestMethodPost:
+            return @"POST";
+        case XWRequestMethodPut:
+            return @"PUT";
+        case XWRequestMethodDelete:
+            return @"DELETE";
+        case XWRequestMethodPatch:
+            return @"PATCH";
+        case XWRequestMethodHead:
+            return @"HEAD";
+        default:
+            return @"UNKNOWN";
+    }
+}
 
 #pragma mark - getter
 + (NSMutableArray <NSURLSessionTask *>*)xw_allSessionTask {
@@ -443,23 +639,31 @@ static AFHTTPSessionManager *xw_sessionManager;
     }
     return xw_allSessionTask;
 }
++ (NSDateFormatter *)xw_networkDateFormatter {
+    if (!xw_networkDateFormatter) {
+        xw_networkDateFormatter = [[NSDateFormatter alloc] init];
+        xw_networkDateFormatter.dateFormat = @"yyyyMMddHHmmss";
+    }
+    return xw_networkDateFormatter;
+}
 
 #pragma mark - 全局请求单例属性
 + (void)load {
-    [super load];
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
 + (void)initialize {
-    [super initialize];
     if (!xw_sessionManager) {
-        xw_sessionManager = [AFHTTPSessionManager manager];
-        xw_sessionManager.requestSerializer.timeoutInterval = 30.0;
-        xw_sessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
-        [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;//状态栏等待菊花
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            xw_sessionManager = [AFHTTPSessionManager manager];
+            xw_sessionManager.requestSerializer.timeoutInterval = 30.0;
+            xw_sessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
+            xw_sessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
+            [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;//状态栏等待菊花
+        });
     }
 }
-
 @end
 
 //********************************************************************************************
@@ -467,12 +671,6 @@ static AFHTTPSessionManager *xw_sessionManager;
 @implementation XWNetworkHelperCache
 static NSString *const kXWNetworkHelperCacheName = @"kXWNetworkHelperCacheName";
 static YYCache *xw_dataCache;
-
-#pragma mark - system
-+ (void)initialize {
-    [super initialize];
-    xw_dataCache = [YYCache cacheWithName:kXWNetworkHelperCacheName];
-}
 
 #pragma mark - public
 + (void)setHttpCache:(id)httpData URL:(NSString *)URL parameters:(NSDictionary *)paramters {
@@ -491,6 +689,11 @@ static YYCache *xw_dataCache;
     [xw_dataCache removeAllObjects];
 }
 
+#pragma mark - system
++ (void)initialize {
+    xw_dataCache = [YYCache cacheWithName:kXWNetworkHelperCacheName];
+}
+
 #pragma mark - private
 + (NSString *)cacheKeyWithURL:(NSString *)URL parameters:(NSDictionary *)paramters {
     if (!paramters || paramters.count == 0) {
@@ -498,9 +701,8 @@ static YYCache *xw_dataCache;
     }
     NSData *paramterData = [NSJSONSerialization dataWithJSONObject:paramters options:0 error:nil];
     NSString *paramterStr = [[NSString alloc] initWithData:paramterData encoding:NSUTF8StringEncoding];
-    return [NSString stringWithFormat:@"%@%@",URL,paramterStr];
+    return [NSString stringWithFormat:@"%@>_<%@",URL,paramterStr];
 }
-
 @end
 
 
@@ -513,29 +715,24 @@ static YYCache *xw_dataCache;
 
 #ifdef DEBUG
 @implementation NSArray (XWNetworkHelper)
-
 - (NSString *)descriptionWithLocale:(id)locale {
     NSMutableString *strM = [NSMutableString stringWithString:@"(\n"];
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [strM appendFormat:@"\t%@,\n", obj];
     }];
     [strM appendString:@")"];
-    
     return strM;
 }
 
 @end
 
 @implementation NSDictionary (XWNetworkHelper)
-
 - (NSString *)descriptionWithLocale:(id)locale {
     NSMutableString *strM = [NSMutableString stringWithString:@"{\n"];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [strM appendFormat:@"\t%@ = %@;\n", key, obj];
     }];
-    
     [strM appendString:@"}\n"];
-    
     return strM;
 }
 @end

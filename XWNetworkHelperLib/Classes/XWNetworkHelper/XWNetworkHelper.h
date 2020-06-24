@@ -35,8 +35,11 @@ typedef void(^XWNetworkStatus)(XWNetworkStatusType networkStatus);
 /// 请求成功回调
 typedef void(^XWHttpRequestSuccess)(id responseObject);
 
+/// 请求成功回调 responseObject:服务端返回最新数据, allHeaderFields: Header
+typedef void(^XWHttpRequestHeaderSuccess)(id responseObject, NSDictionary *allHeaderFields);
+
 /// 请求失败回调
-typedef void(^XWHttpRequestFailed)(NSError *error);
+typedef void(^XWHttpRequestFailed)(NSError *error, NSInteger code, NSString *message);
 
 /// 缓存的数据
 typedef void(^XWHttpRequestCache)(id responseObject);
@@ -83,32 +86,80 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
 + (void)closeLog;
 
 #pragma mark Get 请求
-/// Get 无缓存
+/**
+ Get 无缓存
+ */
 + (__kindof NSURLSessionTask *)GET:(NSString *)URL
-                        parameters:(id)parameters
+                        parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
 
-/// Get 自动缓存
+/**
+ Get 自动缓存
+ */
 + (__kindof NSURLSessionTask *)GET:(NSString *)URL
-                        parameters:(id)parameters
+                        parameters:(NSDictionary *)parameters
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
+
+/**
+ Get 自动缓存 - 指定缓存参数
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                   cacheParameters:(NSDictionary *)cacheParameters
                      responseCache:(XWHttpRequestCache)responseCache
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
 
 #pragma mark POST 请求
-/// POST 无缓存
+/**
+ POST 无缓存
+ */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
-                         parameters:(id)parameters
+                         parameters:(NSDictionary *)parameters
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure;
 
-/// POST 自动缓存
+/**
+ POST 无缓存  成功回调 (包含 header)
+ */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
-                         parameters:(id)parameters
+                         parameters:(NSDictionary *)parameters
+                  successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
+                            failure:(XWHttpRequestFailed)failure;
+
+/**
+ POST 自动缓存
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
                       responseCache:(XWHttpRequestCache)responseCache
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure;
+
+/**
+ POST 自动缓存 - 指定缓存参数
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                    cacheParameters:(NSDictionary *)cacheParameters
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure;
+
+#pragma mark PUT
++ (__kindof NSURLSessionTask *)PUT:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
+
+#pragma mark DELETE
++ (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
+                           parameters:(NSDictionary *)parameters
+                              success:(XWHttpRequestSuccess)success
+                              failure:(XWHttpRequestFailed)failure;
 
 #pragma mark 上传
 /**
@@ -215,6 +266,9 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
  *  @param open YES(打开), NO(关闭)
  */
 + (void)openNetworkActivityIndicator:(BOOL)open;
+
+/// 移除AuthorizationHeader - Clears any existing value for the "Authorization" HTTP header.
++ (void)clearAuthorizationHeader;
 
 /**
  配置自建证书的Https请求, 参考链接: http://blog.csdn.net/syg90178aw/article/details/52839103
