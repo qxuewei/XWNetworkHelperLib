@@ -938,7 +938,7 @@
 			};
 			name = Debug;
 		};
-		511C46F867074C8D758860B79AD90231 /* Debug */ = {
+		540254847224B11ACFE45F2799B3AD89 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 37063C2009998EAB3CEA4B6827237CFF /* XWNetworkHelperLib.debug.xcconfig */;
 			buildSettings = {
@@ -954,7 +954,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib.modulemap";
 				PRODUCT_MODULE_NAME = XWNetworkHelperLib;
@@ -997,37 +997,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		8D98EC986168D302B7115D94D5CD71EC /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 744AA6266B05679F9951835F4E404201 /* XWNetworkHelperLib.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib.modulemap";
-				PRODUCT_MODULE_NAME = XWNetworkHelperLib;
-				PRODUCT_NAME = XWNetworkHelperLib;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		8F17DC3A99F99FBAD606CE6963886315 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1187,6 +1156,37 @@
 			};
 			name = Release;
 		};
+		A4030A448750844BF6B546309B48CFFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 744AA6266B05679F9951835F4E404201 /* XWNetworkHelperLib.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/XWNetworkHelperLib/XWNetworkHelperLib.modulemap";
+				PRODUCT_MODULE_NAME = XWNetworkHelperLib;
+				PRODUCT_NAME = XWNetworkHelperLib;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		BD3A69076C1B8ED0EB8EED8E9254F409 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 130A6F30AD2AE431AF042933235C0AB8 /* AFNetworking.release.xcconfig */;
@@ -1319,8 +1319,8 @@
 		2D1EA3B33B674B5C672480BDE52D8E80 /* Build configuration list for PBXNativeTarget "XWNetworkHelperLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				511C46F867074C8D758860B79AD90231 /* Debug */,
-				8D98EC986168D302B7115D94D5CD71EC /* Release */,
+				540254847224B11ACFE45F2799B3AD89 /* Debug */,
+				A4030A448750844BF6B546309B48CFFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
