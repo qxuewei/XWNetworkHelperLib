@@ -93,12 +93,30 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
                         parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
+/**
+ Get 无缓存 (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
 
 /**
  Get 自动缓存
  */
 + (__kindof NSURLSessionTask *)GET:(NSString *)URL
                         parameters:(NSDictionary *)parameters
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
+
+/**
+ Get 自动缓存  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
                      responseCache:(XWHttpRequestCache)responseCache
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
@@ -113,6 +131,17 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
 
+/**
+ Get 自动缓存 - 指定缓存参数    (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                   cacheParameters:(NSDictionary *)cacheParameters
+                           headers:(NSDictionary *)headers
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
+
 #pragma mark POST 请求
 /**
  POST 无缓存
@@ -123,10 +152,28 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
                             failure:(XWHttpRequestFailed)failure;
 
 /**
- POST 无缓存  成功回调 (包含 header)
+ POST 无缓存  (自定义Header)
  */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
                          parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure;
+
+/**
+ POST 无缓存  成功回调 (返回值包含 header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                  successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
+                            failure:(XWHttpRequestFailed)failure;
+
+/**
+ POST 无缓存  成功回调 (返回值包含 header)  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
                   successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
                             failure:(XWHttpRequestFailed)failure;
 
@@ -135,6 +182,16 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
  */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
                          parameters:(NSDictionary *)parameters
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure;
+
+/**
+ POST 自动缓存  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
                       responseCache:(XWHttpRequestCache)responseCache
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure;
@@ -149,15 +206,62 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure;
 
-#pragma mark PUT
+/**
+ POST 自动缓存 - 指定缓存参数  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                    cacheParameters:(NSDictionary *)cacheParameters
+                            headers:(NSDictionary *)headers
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure;
+
+#pragma mark - PUT
+/// PUT
+/// @param URL URL
+/// @param parameters 参数
+/// @param success 成功
+/// @param failure 失败
 + (__kindof NSURLSessionTask *)PUT:(NSString *)URL
                         parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure;
 
-#pragma mark DELETE
+/// PUT （自定义Header）
+/// @param URL URL
+/// @param parameters 参数
+/// @param headers 自定义Header
+/// @param success 成功
+/// @param failure 失败
++ (__kindof NSURLSessionTask *)PUT:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure;
+
+#pragma mark - DELETE
+
+/// DELETE
+/// @param URL URL
+/// @param parameters 参数
+/// @param success 成功
+/// @param failure 失败
 + (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
                            parameters:(NSDictionary *)parameters
+                              success:(XWHttpRequestSuccess)success
+                              failure:(XWHttpRequestFailed)failure;
+
+
+/// DELETE
+/// @param URL URL
+/// @param parameters 参数
+/// @param headers 自定义Header
+/// @param success 成功
+/// @param failure 失败
++ (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
+                           parameters:(NSDictionary *)parameters
+                              headers:(NSDictionary *)headers
                               success:(XWHttpRequestSuccess)success
                               failure:(XWHttpRequestFailed)failure;
 
@@ -223,7 +327,7 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
 + (NSURLSessionTask *)downloadWithURL:(NSString *)URL
                               fileDir:(NSString *)fileDir
                              progress:(XWHttpProgress)progress
-                              success:(void(^)(NSString *))success
+                              success:(void(^)(NSString *filePath))success
                               failure:(XWHttpRequestFailed)failure;
 
 
@@ -235,6 +339,10 @@ typedef void(^XWHttpProgress)(NSProgress *progress);
  @param sessionManager AFHTTPSessionManager的实例
  */
 + (void)setAFHTTPSessionManagerProperty:(void(^)(AFHTTPSessionManager *sessionManager))sessionManager;
+
+/// 设置全局 header
+/// @param header header
++ (void)configGlobalHeader:(NSDictionary *)header;
 
 /**
  *  设置网络请求参数的格式:默认为二进制格式

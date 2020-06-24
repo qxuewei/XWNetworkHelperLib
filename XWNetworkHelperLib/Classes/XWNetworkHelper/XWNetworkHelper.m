@@ -173,7 +173,19 @@ static NSDateFormatter *xw_networkDateFormatter;
                         parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil headers:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ Get 无缓存 (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil headers:headers responseCache:nil success:success successWithHeader:nil failure:failure];
     
 }
 
@@ -185,7 +197,20 @@ static NSDateFormatter *xw_networkDateFormatter;
                      responseCache:(XWHttpRequestCache)responseCache
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil headers:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ Get 自动缓存  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:nil headers:headers responseCache:responseCache success:success successWithHeader:nil failure:failure];
     
 }
 
@@ -198,7 +223,22 @@ static NSDateFormatter *xw_networkDateFormatter;
                      responseCache:(XWHttpRequestCache)responseCache
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:cacheParameters responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:cacheParameters headers:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+
+/**
+ Get 自动缓存 - 指定缓存参数    (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)GET:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                   cacheParameters:(NSDictionary *)cacheParameters
+                           headers:(NSDictionary *)headers
+                     responseCache:(XWHttpRequestCache)responseCache
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodGet parameters:parameters cacheParameters:cacheParameters headers:headers responseCache:responseCache success:success successWithHeader:nil failure:failure];
     
 }
 
@@ -210,18 +250,42 @@ static NSDateFormatter *xw_networkDateFormatter;
                          parameters:(NSDictionary *)parameters
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:nil responseCache:nil success:success successWithHeader:nil failure:failure];
     
 }
 
 /**
- POST 无缓存  成功回调 (包含 header)
+ POST 无缓存  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:headers responseCache:nil success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ POST 无缓存  成功回调 (返回值包含 header)
  */
 + (__kindof NSURLSessionTask *)POST:(NSString *)URL
                          parameters:(NSDictionary *)parameters
                   successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
                             failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:nil success:nil successWithHeader:successWithHeader failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:nil responseCache:nil success:nil successWithHeader:successWithHeader failure:failure];
+    
+}
+
+/**
+ POST 无缓存  成功回调 (返回值包含 header)  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
+                  successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:headers responseCache:nil success:nil successWithHeader:successWithHeader failure:failure];
     
 }
 
@@ -233,7 +297,20 @@ static NSDateFormatter *xw_networkDateFormatter;
                       responseCache:(XWHttpRequestCache)responseCache
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ POST 自动缓存  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                            headers:(NSDictionary *)headers
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:nil headers:headers responseCache:responseCache success:success successWithHeader:nil failure:failure];
     
 }
 
@@ -246,24 +323,78 @@ static NSDateFormatter *xw_networkDateFormatter;
                       responseCache:(XWHttpRequestCache)responseCache
                             success:(XWHttpRequestSuccess)success
                             failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:cacheParameters responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:cacheParameters headers:nil responseCache:responseCache success:success successWithHeader:nil failure:failure];
+    
+}
+
+/**
+ POST 自动缓存 - 指定缓存参数  (自定义Header)
+ */
++ (__kindof NSURLSessionTask *)POST:(NSString *)URL
+                         parameters:(NSDictionary *)parameters
+                    cacheParameters:(NSDictionary *)cacheParameters
+                            headers:(NSDictionary *)headers
+                      responseCache:(XWHttpRequestCache)responseCache
+                            success:(XWHttpRequestSuccess)success
+                            failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPost parameters:parameters cacheParameters:cacheParameters headers:headers responseCache:responseCache success:success successWithHeader:nil failure:failure];
     
 }
 
 #pragma mark - PUT
+/// PUT
+/// @param URL URL
+/// @param parameters 参数
+/// @param success 成功
+/// @param failure 失败
 + (__kindof NSURLSessionTask *)PUT:(NSString *)URL
                         parameters:(NSDictionary *)parameters
                            success:(XWHttpRequestSuccess)success
                            failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodPut parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodPut parameters:parameters cacheParameters:nil headers:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+}
+
+/// PUT （自定义Header）
+/// @param URL URL
+/// @param parameters 参数
+/// @param headers 自定义Header
+/// @param success 成功
+/// @param failure 失败
++ (__kindof NSURLSessionTask *)PUT:(NSString *)URL
+                        parameters:(NSDictionary *)parameters
+                           headers:(NSDictionary *)headers
+                           success:(XWHttpRequestSuccess)success
+                           failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodPut parameters:parameters cacheParameters:nil headers:headers responseCache:nil success:success successWithHeader:nil failure:failure];
 }
 
 #pragma mark - DELETE
+
+/// DELETE
+/// @param URL URL
+/// @param parameters 参数
+/// @param success 成功
+/// @param failure 失败
 + (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
                            parameters:(NSDictionary *)parameters
                               success:(XWHttpRequestSuccess)success
                               failure:(XWHttpRequestFailed)failure {
-    return [self xw_requestWithURL:URL method:XWRequestMethodDelete parameters:parameters cacheParameters:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+    return [self xw_requestWithURL:URL method:XWRequestMethodDelete parameters:parameters cacheParameters:nil headers:nil responseCache:nil success:success successWithHeader:nil failure:failure];
+}
+
+
+/// DELETE
+/// @param URL URL
+/// @param parameters 参数
+/// @param headers 自定义Header
+/// @param success 成功
+/// @param failure 失败
++ (__kindof NSURLSessionTask *)DELETE:(NSString *)URL
+                           parameters:(NSDictionary *)parameters
+                              headers:(NSDictionary *)headers
+                              success:(XWHttpRequestSuccess)success
+                              failure:(XWHttpRequestFailed)failure {
+    return [self xw_requestWithURL:URL method:XWRequestMethodDelete parameters:parameters cacheParameters:nil headers:headers responseCache:nil success:success successWithHeader:nil failure:failure];
 }
 
 #pragma mark 上传
@@ -383,7 +514,7 @@ static NSDateFormatter *xw_networkDateFormatter;
 + (NSURLSessionTask *)downloadWithURL:(NSString *)URL
                               fileDir:(NSString *)fileDir
                              progress:(XWHttpProgress)progress
-                              success:(void(^)(NSString *))success
+                              success:(void(^)(NSString *filePath))success
                               failure:(XWHttpRequestFailed)failure {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     __block NSURLSessionDownloadTask *downloadTask = [xw_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
@@ -514,6 +645,7 @@ static NSDateFormatter *xw_networkDateFormatter;
                                           method:(XWRequestMethod)method
                                       parameters:(NSDictionary *)parameters
                                  cacheParameters:(NSDictionary *)cacheParameters
+                                         headers:(NSDictionary *)headers
                                    responseCache:(XWHttpRequestCache)responseCache
                                          success:(XWHttpRequestSuccess)success
                                successWithHeader:(XWHttpRequestHeaderSuccess)successWithHeader
@@ -527,7 +659,7 @@ static NSDateFormatter *xw_networkDateFormatter;
         }
     }
     
-    NSURLSessionTask *sessionTask = [self xw_sessionTasktWithURL:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]] method:method parameters:parameters success:^(NSURLSessionDataTask *task, id  _Nullable responseObject) {
+    NSURLSessionTask *sessionTask = [self xw_sessionTasktWithURL:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]] method:method parameters:parameters headers:headers success:^(NSURLSessionDataTask *task, id  _Nullable responseObject) {
         success ? success(responseObject) : nil;
         if (successWithHeader) {
             if ([task.response isKindOfClass:NSHTTPURLResponse.class]) {
@@ -574,32 +706,33 @@ static NSDateFormatter *xw_networkDateFormatter;
 + (NSURLSessionTask *)xw_sessionTasktWithURL:(NSString *)URL
                                       method:(XWRequestMethod)method
                                   parameters:(NSDictionary *)parameters
+                                     headers:(NSDictionary *)headers
                                      success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
                                      failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure {
     NSURLSessionTask *sessionTask;
     switch (method) {
         case XWRequestMethodGet:
-            sessionTask = [xw_sessionManager GET:URL parameters:parameters headers:xw_networkGlobalHeader progress:nil success:success failure:failure];
+            sessionTask = [xw_sessionManager GET:URL parameters:parameters headers: headers ?: xw_networkGlobalHeader progress:nil success:success failure:failure];
             break;
 
         case XWRequestMethodPost:
-            sessionTask = [xw_sessionManager POST:URL parameters:parameters headers:xw_networkGlobalHeader progress:nil success:success failure:failure];
+            sessionTask = [xw_sessionManager POST:URL parameters:parameters headers:headers ?: xw_networkGlobalHeader progress:nil success:success failure:failure];
             break;
 
         case XWRequestMethodPut:
-            sessionTask = [xw_sessionManager PUT:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            sessionTask = [xw_sessionManager PUT:URL parameters:parameters headers:headers ?: xw_networkGlobalHeader success:success failure:failure];
             break;
 
         case XWRequestMethodDelete:
-            sessionTask = [xw_sessionManager DELETE:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            sessionTask = [xw_sessionManager DELETE:URL parameters:parameters headers:headers ?: xw_networkGlobalHeader success:success failure:failure];
             break;
 
         case XWRequestMethodPatch:
-            sessionTask = [xw_sessionManager PATCH:URL parameters:parameters headers:xw_networkGlobalHeader success:success failure:failure];
+            sessionTask = [xw_sessionManager PATCH:URL parameters:parameters headers:headers ?: xw_networkGlobalHeader success:success failure:failure];
             break;
             
         case XWRequestMethodHead:
-            sessionTask = [xw_sessionManager HEAD:URL parameters:parameters headers:xw_networkGlobalHeader success:^(NSURLSessionDataTask * _Nonnull task) {
+            sessionTask = [xw_sessionManager HEAD:URL parameters:parameters headers:headers ?: xw_networkGlobalHeader success:^(NSURLSessionDataTask * _Nonnull task) {
                 success(task, nil);
             } failure:failure];
             break;
