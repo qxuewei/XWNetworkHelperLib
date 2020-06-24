@@ -14,7 +14,7 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - XWNetworkHelperLib (1.0.1):
+  - XWNetworkHelperLib (1.0.2):
     - AFNetworking
     - YYCache
   - YYCache (1.0.4)
@@ -33,7 +33,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  XWNetworkHelperLib: 1bf0b05c117e20dd027cf86c15922e47ec756ed7
+  XWNetworkHelperLib: 3815a5c6d752cc3d11e4341065a8e9fa93759c08
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
 
 PODFILE CHECKSUM: f3f229aa5087e08ff3c1798acac159dab9766311
