@@ -10,6 +10,7 @@
 #import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "YYCache.h"
+#import "XWSafeMutableArray.h"
 
 typedef NS_ENUM(NSUInteger, XWRequestMethod) {
     XWRequestMethodGet      =   0,
@@ -75,7 +76,7 @@ typedef NS_ENUM(NSUInteger, XWRequestMethod) {
 #pragma mark - 网络工具类
 @implementation XWNetworkHelper
 static BOOL xw_isOpenLog;
-static NSMutableArray <NSURLSessionTask *> *xw_allSessionTask;
+static XWSafeMutableArray *xw_allSessionTask;
 static AFHTTPSessionManager *xw_sessionManager;
 static NSDictionary *xw_networkGlobalHeader;
 static NSDateFormatter *xw_networkDateFormatter;
@@ -766,9 +767,9 @@ static NSDateFormatter *xw_networkDateFormatter;
 }
 
 #pragma mark - getter
-+ (NSMutableArray <NSURLSessionTask *>*)xw_allSessionTask {
++ (XWSafeMutableArray *)xw_allSessionTask {
     if(!xw_allSessionTask){
-        xw_allSessionTask = [[NSMutableArray alloc] init];
+        xw_allSessionTask = [[XWSafeMutableArray alloc] init];
     }
     return xw_allSessionTask;
 }
