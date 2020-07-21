@@ -11,6 +11,7 @@
 #endif
 
 #import "XWNetworkHelper.h"
+#import "XWSafeMutableArray.h"
 
 FOUNDATION_EXPORT double XWNetworkHelperLibVersionNumber;
 FOUNDATION_EXPORT const unsigned char XWNetworkHelperLibVersionString[];
